@@ -56,3 +56,6 @@ env_variables:
   # This is useful for cases like indicating to the user that this
   # is a demo deployment of the app.
   HEADER_MESSAGE: ""
+
+  # disable ssl verification 
+  PYTHONHTTPSVERIFY: 0

@@ -20,23 +20,27 @@ LOOPBACK_CLIENT_ID = 'LOOPBACK_CLIENT_ID'
 
 # Turn/Stun server override. This allows AppRTC to connect to turn servers
 # directly rather than retrieving them from an ICE server provider.
-ICE_SERVER_OVERRIDE = None
+# ICE_SERVER_OVERRIDE = None
 # Enable by uncomment below and comment out above, then specify turn and stun
-# ICE_SERVER_OVERRIDE  = [
-#   {
-#     "urls": [
-#       "turn:hostname/IpToTurnServer:19305?transport=udp",
-#       "turn:hostname/IpToTurnServer:19305?transport=tcp"
-#     ],
-#     "username": "TurnServerUsername",
-#     "credential": "TurnServerCredentials"
-#   },
-#   {
-#     "urls": [
-#       "stun:hostname/IpToStunServer:19302"
-#     ]
-#   }
-# ]
+ICE_SERVER_OVERRIDE  = [
+  {
+    "urls": [
+        'turn:turn4.acquire.io:443',
+        'turn:turn4.acquire.io:80',
+        'turn:turn2.acquire.io:443',
+        'turn:turn2.acquire.io:80', 
+    ],
+    "username": "test",
+    "credential": "test"
+  },
+  {
+    "urls": [
+      'stun:stun.l.google.com:19302',
+      'stun:stun1.l.google.com:19302',
+      'stun:stun2.l.google.com:19302',
+    ]
+  }
+]
 
 ICE_SERVER_BASE_URL = 'https://appr.tc'
 ICE_SERVER_URL_TEMPLATE = '%s/v1alpha/iceconfig?key=%s'
@@ -45,7 +49,7 @@ HEADER_MESSAGE = os.environ.get('HEADER_MESSAGE')
 ICE_SERVER_URLS = [url for url in os.environ.get('ICE_SERVER_URLS', '').split(',') if url]
 
 # Dictionary keys in the collider instance info constant.
-WSS_INSTANCE_HOST_KEY = 'host_port_pair'
+WSS_INSTANCE_HOST_KEY = 'frank.dev.acquire.io:443'
 WSS_INSTANCE_NAME_KEY = 'vm_name'
 WSS_INSTANCE_ZONE_KEY = 'zone'
 WSS_INSTANCES = [{
@@ -61,7 +65,7 @@ WSS_INSTANCES = [{
 WSS_HOST_PORT_PAIRS = [ins[WSS_INSTANCE_HOST_KEY] for ins in WSS_INSTANCES]
 
 # memcache key for the active collider host.
-WSS_HOST_ACTIVE_HOST_KEY = 'wss_host_active_host'
+WSS_HOST_ACTIVE_HOST_KEY = 'frank.dev.acquire.io:443'
 
 # Dictionary keys in the collider probing result.
 WSS_HOST_IS_UP_KEY = 'is_up'

@@ -131,13 +131,14 @@ def get_wss_parameters(request):
     # if that fails, use fallback value.
     memcache_client = memcache.Client()
     wss_active_host = memcache_client.get(constants.WSS_HOST_ACTIVE_HOST_KEY)
+    print(wss_active_host, constants.WSS_HOST_ACTIVE_HOST_KEY)
     if wss_active_host in constants.WSS_HOST_PORT_PAIRS:
       wss_host_port_pair = wss_active_host
     else:
       logging.warning(
           'Invalid or no value returned from memcache, using fallback: '
           + json.dumps(wss_active_host))
-      wss_host_port_pair = constants.WSS_HOST_PORT_PAIRS[0]
+      wss_host_port_pair = constants.WSS_HOST_ACTIVE_HOST_KEY #constants.WSS_HOST_PORT_PAIRS[0]
 
   if wss_tls and wss_tls == 'false':
     wss_url = 'ws://' + wss_host_port_pair + '/ws'
@@ -472,6 +473,7 @@ class LeavePage(webapp2.RequestHandler):
 class MessagePage(webapp2.RequestHandler):
   def write_response(self, result):
     content = json.dumps({ 'result' : result })
+    self.response.headers['Access-Control-Allow-Origin'] = '*'
     self.response.write(content)
 
   def send_message_to_collider(self, room_id, client_id, message):
@@ -488,6 +490,7 @@ class MessagePage(webapp2.RequestHandler):
       # TODO(tkchin): better error handling.
       self.error(500)
       return
+    self.response.headers['Access-Control-Allow-Origin'] = '*'
     self.write_response(constants.RESPONSE_SUCCESS)
 
   def post(self, room_id, client_id):
@@ -512,6 +515,7 @@ class JoinPage(webapp2.RequestHandler):
     # TODO(tkchin): Clean up response format. For simplicity put everything in
     # params for now.
     params['messages'] = messages
+    self.response.headers['Access-Control-Allow-Origin'] = '*'
     self.response.write(json.dumps({
       'result': result,
       'params': params
@@ -519,6 +523,7 @@ class JoinPage(webapp2.RequestHandler):
 
   def write_room_parameters(self, room_id, client_id, messages, is_initiator):
     params = get_room_parameters(self.request, room_id, client_id, is_initiator)
+    self.response.headers['Access-Control-Allow-Origin'] = '*'
     self.write_response('SUCCESS', params, messages)
 
   def post(self, room_id):
@@ -540,6 +545,7 @@ class MainPage(webapp2.RequestHandler):
   def write_response(self, target_page, params={}):
     template = jinja_environment.get_template(target_page)
     content = template.render(params)
+    self.response.headers['Access-Control-Allow-Origin'] = '*' 
     self.response.out.write(content)
 
   def get(self):
@@ -549,6 +555,7 @@ class MainPage(webapp2.RequestHandler):
     params = get_room_parameters(self.request, None, None, None)
     # room_id/room_link will not be included in the returned parameters
     # so the client will show the landing page for room selection.
+    self.response.headers['Access-Control-Allow-Origin'] = '*'
     self.write_response('index_template.html', params)
 
 class RoomPage(webapp2.RequestHandler):
